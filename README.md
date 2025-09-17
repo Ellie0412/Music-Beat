@@ -122,4 +122,6 @@ python src/model.py
 ![评估散点](figures/model/eval_scatter.png)
 
 
+## 特征贡献度分析
+![alt text](figures/model/shap_bar.png)
 
