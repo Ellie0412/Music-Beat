@@ -6,14 +6,16 @@ import logging
 from pathlib import Path
 import sys
 import pandas as pd
+
+
+# 把 src 加入 PYTHONPATH，无需安装包
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from src import load_clean as lc
 from src import eda as eda
 from src import composite as comp
 from src import corr as corr
 from src import model as model
-
-# 把 src 加入 PYTHONPATH，无需安装包
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 # ---------- 路径常量 ----------
 PROJ  = Path("/Users/ellie/Documents/Assignments/university-python/music_beat")
