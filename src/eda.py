@@ -48,5 +48,57 @@ def bpm_dist(train):
 
 
 
+# 单特征 train/test 对比图
+def plot_train_test_feature(col: str,
+                            train_df: pd.DataFrame,
+                            test_df: pd.DataFrame,
+                            save_dir: str = FIG_EDA):
+    if col not in train_df.columns or col not in test_df.columns:
+        print(f'{col} 不存在于某个数据集，跳过')
+        return
+
+    sns.set_style('whitegrid')
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4))
+
+    # 1. 叠加直方图 + KDE
+    sns.histplot(train_df[col], bins=40, kde=True, color='#F6BEC8',
+                 alpha=0.5, line_kws={'linewidth': 2}, ax=axes[0], label='train')
+    sns.histplot(test_df[col], bins=40, kde=True, color='#78974B',
+                 alpha=0.5, line_kws={'linewidth': 2}, ax=axes[0], label='test')
+    axes[0].set_title(f'{col}')
+    axes[0].set_xlabel(col)
+    axes[0].set_ylabel('Density')
+    axes[0].legend()
+
+    # 2. 横向箱线图
+    box_data = pd.concat([
+        train_df[[col]].assign(dataset='train'),
+        test_df[[col]].assign(dataset='test')
+    ])
+    sns.boxplot(data=box_data, x=col, y='dataset', ax=axes[1],
+                palette={'train': '#F6BEC8', 'test': '#78974B'})
+    axes[1].set_title(f'{col}')
+    axes[1].set_xlabel(col)
+    axes[1].set_ylabel('')
+
+    plt.tight_layout()
+    out_path = os.path.join(save_dir, f'train_test_{col}.png')
+    plt.savefig(out_path, dpi=300, bbox_inches='tight')
+    plt.close()          # 必须关闭，防止内存泄漏
+    print(f'[eda] 已保存 {out_path}')
+
+#批量调用
+NUM_FEATURES = [
+    'RhythmScore', 'AudioLoudness', 'VocalContent',
+    'AcousticQuality', 'InstrumentalScore', 'LivePerformanceLikelihood',
+    'MoodScore', 'TrackDurationMs', 'Energy', 'BeatsPerMinute'
+]
+
+def batch_plot_train_test(train_df, test_df, save_dir: str = FIG_EDA):
+    """对 NUM_FEATURES 中同时存在于 train/test 的列出图"""
+    os.makedirs(save_dir, exist_ok=True)
+    for feat in NUM_FEATURES:
+        if feat in train_df.columns and feat in test_df.columns:
+            plot_train_test_feature(feat, train_df, test_df, save_dir)
 
     
