@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-music_beat 一站式执行脚本
-usage:
-    python -m src.run_all          # 全流程
-    python -m src.run_all -s       # 跳过训练
-    python -m src.run_all -v       # 详细日志
-"""
+
 import argparse
 import logging
 from pathlib import Path
 import sys
-
 import pandas as pd
 
 # 把 src 加入 PYTHONPATH，无需安装包
@@ -66,7 +59,8 @@ def main(skip_train: bool = False, verbose: bool = False):
     log_step("2. EDA 概览 & BPM 分布图")
     safe_run(eda.quick_overview, train, test)
     safe_run(eda.bpm_dist, train)
-
+    safe_run(eda.batch_plot_train_test, train, test)
+    
     log_step("3. 生成组合特征 & 单特征大图")
     train_ext = comp.add_composite(train)
     test_ext  = comp.add_composite(test)
