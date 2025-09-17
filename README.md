@@ -122,11 +122,4 @@ python src/model.py
 ![评估散点](figures/model/eval_scatter.png)
 
 
-# 相关性分析
-
-## 训练集 vs 测试集相关性对比
-
-![训练集与测试集相关性对比](figures/corr/train_vs_test_corr.png)
-
-
 
